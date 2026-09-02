@@ -69,7 +69,7 @@ function renderClassicTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?:
 
   const photoSize = Math.max(45, Math.round(110 * scale));
   const logoW = Math.max(65, Math.round(150 * scale));
-  const socialIconSize = Math.max(16, Math.round(30 * scale));
+  const socialIconSize = Math.max(14, Math.round(24 * scale));
   const contactIconSize = Math.max(12, Math.round(22 * scale));
 
   const nameFontSize = Math.max(12, Math.round(23 * scale));
