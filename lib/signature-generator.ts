@@ -739,14 +739,16 @@ function renderCreativeTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?
 }
 
 /**
- * TEMPLATE 06 — DMHCA Simplified (No-Footer Standout with clean design)
+ * TEMPLATE 06 — DMHCA Simplified (Gradiant-footer with clean  Design)
  */
 function renderLuxeTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?: DimensionOptions): string {
-  const W = Math.min(600, Math.max(300, dim?.width ?? 600));
-  const H = Math.min(250, Math.max(100, dim?.height ?? 200));
+  // Baseline canvas target: 420px width x 230px height (or custom dim)
+  const W = Math.min(600, Math.max(300, dim?.width ?? 420));
+  const H = Math.min(450, Math.max(100, dim?.height ?? 230));
 
-  const scaleW = W / 600;
-  const scaleH = H / 200;
+  // Baseline scale factors centered on 420x230
+  const scaleW = W / 420;
+  const scaleH = H / 230;
   const scale = Math.min(scaleW, scaleH);
 
   const name = escapeHtml(emp.fullName);
@@ -765,130 +767,131 @@ function renderLuxeTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?: Di
   const firstName = nameParts[0] || '';
   const lastName = nameParts.slice(1).join(' ');
   const formattedName = lastName
-    ? `${firstName} <span style="color: #D31016;">${lastName}</span>`
+    ? `${firstName} <span style="color: #062B67;">${lastName}</span>`
     : firstName;
 
-  // Proportional Scaled Layout Dimensions
+  // Scaled dimensions based on 420x230 baseline
   const innerW = W - 28;
-  const col1W = Math.max(75, Math.round(125 * scaleW));
-  const col2W = Math.max(130, Math.round(260 * scaleW));
-  const col3W = Math.max(95, innerW - col1W - col2W);
+  const photoSize = Math.max(48, Math.round(85 * scale));
+  const logoW = Math.max(68, Math.round(132 * scale));
 
-  const photoSize = Math.max(48, Math.round(100 * scale));
-  const logoW = Math.max(65, Math.round(145 * scale));
-  const socialIconSize = Math.max(14, Math.round(24 * scale));
-  const contactIconSize = Math.max(12, Math.round(19 * scale));
+  const col1W = photoSize + 12;
+  const col2W = innerW - col1W;
 
-  const nameFontSize = Math.max(13, Math.round(22 * scale));
-  const titleFontSize = Math.max(8.5, Math.round(11 * scale));
-  const contactFontSize = Math.max(8, Math.round(11.5 * scale));
-  const cardPadY = Math.max(6, Math.round(16 * scaleH));
+  const headerLeftW = innerW - logoW;
+  const headerRightW = logoW;
+
+  const badgeW = Math.max(110, Math.round(125 * scaleW));
+  const bannerTextW = innerW - badgeW;
+
+  const nameFontSize = Math.max(13, Math.round(21 * scale));
+  const headerMetaSize = Math.max(8.5, Math.round(11 * scale));
+  const contactFontSize = Math.max(8, Math.round(10.5 * scale));
+  const socialIconSize = Math.max(13, Math.round(19 * scale));
+
+  const bannerHeadingSize = Math.max(9, Math.round(12.5 * scale));
+  const bannerSubSize = Math.max(7, Math.round(9.5 * scale));
+  const bannerPadY = Math.max(5, Math.round(10 * scaleH));
 
   return `
-<!-- DMHCA Email Signature - Template 06: DMHCA Simplified (Creative No-Footer Standout Design) -->
+<!-- DMHCA Email Signature - Template 06: DMHCA Simplified (E-mail safe Design) -->
 <table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; color: #1e293b; margin: 0 auto; table-layout: fixed;">
-  <!-- Top Accent Bar: Split Gradient Header Stripe -->
+  <!-- Section 1: Header Row (Top Left: Name & Designation | Web; Top Right: DMHCA Logo) -->
   <tr>
-    <td width="${W}" style="width: ${W}px; height: 4px; background-color: #062B67; font-size: 0; line-height: 0;">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="height: 4px;">
+    <td width="${W}" style="width: ${W}px; padding: ${Math.max(6, Math.round(12 * scaleH))}px 14px 6px 14px; background-color: #ffffff; vertical-align: middle;" align="center">
+      <table width="${innerW}" cellpadding="0" cellspacing="0" border="0" style="width: ${innerW}px; border-collapse: collapse; table-layout: fixed;">
         <tr>
-          <td width="70%" style="background-color: #062B67; height: 4px;"></td>
-          <td width="30%" style="background-color: #D31016; height: 4px;"></td>
+          <!-- Top Left: Employee Name & Subtitle -->
+          <td width="${headerLeftW}" style="width: ${headerLeftW}px; vertical-align: middle; padding-right: 8px;" align="left">
+            <div style="font-size: ${nameFontSize}px; font-weight: 800; color: #062B67; line-height: 1.15; font-family: Arial, Helvetica, sans-serif; letter-spacing: -0.2px;">
+              ${formattedName}
+            </div>
+            <div style="font-size: ${headerMetaSize}px; font-weight: 600; color: #4b5563; margin-top: 3px; font-family: Arial, Helvetica, sans-serif; white-space: nowrap;">
+              <span>${designation}</span>
+              <span style="color: #062B67; font-weight: 800; margin: 0 4px;">|</span>
+              <a href="${webUrl}" target="_blank" style="color: #062B67; text-decoration: none; font-weight: 700;">${website}</a>
+            </div>
+          </td>
+
+          <!-- Top Right: DMHCA Company Logo (Explicit Cell Width + align="right" for Perfect Right Alignment in Gmail/Outlook) -->
+          <td width="${headerRightW}" style="width: ${headerRightW}px; vertical-align: middle; text-align: right;" align="right">
+            <img src="${brand.logoSvg}" width="${logoW}" style="width: ${logoW}px; max-width: ${logoW}px; height: auto; display: block; margin: 0 0 0 auto; border: 0;" align="right" alt="DMHCA Logo" />
+          </td>
         </tr>
       </table>
     </td>
   </tr>
 
-  <!-- Main Card Body (NO FOOTER) -->
+  <!-- Full Width Solid Horizontal Line Divider Cell -->
   <tr>
-    <td width="${W}" style="width: ${W}px; padding: ${cardPadY}px 14px; background-color: #ffffff; vertical-align: middle;">
+    <td width="${W}" style="width: ${W}px; padding: 0 14px 2px 14px; background-color: #ffffff;" align="center">
       <table width="${innerW}" cellpadding="0" cellspacing="0" border="0" style="width: ${innerW}px; border-collapse: collapse; table-layout: fixed;">
         <tr>
-          <!-- Col 1: Circular Avatar with Gradient Ring Accent -->
-          <td width="${col1W}" style="width: ${col1W}px; vertical-align: middle; padding-right: 8px;">
-            <table width="${col1W - 8}" cellpadding="0" cellspacing="0" border="0" style="width: ${col1W - 8}px; margin: 0 auto;">
-              <tr>
-                <td style="text-align: center; vertical-align: middle;">
-                  <div style="display: inline-block; padding: 3px; border-radius: 50%; background: linear-gradient(135deg, #062B67 0%, #D31016 100%);">
-                    <img src="${photo}" alt="${name}" width="${photoSize}" height="${photoSize}" style="width: ${photoSize}px; height: ${photoSize}px; border-radius: 50%; object-fit: cover; display: block; border: 2px solid #ffffff;" />
-                  </div>
-                </td>
-              </tr>
-            </table>
+          <td width="${innerW}" style="width: ${innerW}px; height: 2px; background-color: #062B67; font-size: 0; line-height: 0; border-bottom: 2px solid #062B67;">&nbsp;</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- Section 2: Middle Main Body (Left: Photo Avatar; Right: Contact Details List & Social Icons) -->
+  <tr>
+    <td width="${W}" style="width: ${W}px; padding: ${Math.max(8, Math.round(14 * scaleH))}px 14px; background-color: #ffffff; vertical-align: middle;" align="center">
+      <table width="${innerW}" cellpadding="0" cellspacing="0" border="0" style="width: ${innerW}px; border-collapse: collapse; table-layout: fixed;">
+        <tr>
+          <!-- Middle Left: Square Rounded Photo Avatar -->
+          <td width="${col1W}" style="width: ${col1W}px; vertical-align: top; padding-right: 12px;" align="left">
+            <img src="${photo}" alt="${name}" width="${photoSize}" height="${photoSize}" style="width: ${photoSize}px; height: ${photoSize}px; border-radius: 8px; border: 2px solid #062B67; object-fit: cover; display: block;" />
           </td>
 
-          <!-- Col 2: Name, Crimson Floating Badge & Contact List -->
-          <td width="${col2W}" style="width: ${col2W}px; vertical-align: middle; padding-right: 8px;">
-            <!-- Employee Name -->
-            <div style="font-size: ${nameFontSize}px; font-weight: 900; color: #062B67; line-height: 1.15; font-family: Arial, Helvetica, sans-serif; letter-spacing: -0.2px;">
-              ${formattedName}
-            </div>
-
-            <!-- Crimson Ribbon Designation Tag Pill -->
-            <div style="margin-top: 4px; margin-bottom: 8px;">
-              <span style="display: inline-block; background-color: #D31016; color: #ffffff; font-size: ${titleFontSize}px; font-weight: 700; font-family: Arial, Helvetica, sans-serif; text-transform: uppercase; letter-spacing: 0.4px; padding: 2.5px 10px; border-radius: 12px; line-height: 1;">
-                ${designation}
-              </span>
-            </div>
-
-            <!-- Contact List Table -->
-            <table width="${col2W}" cellpadding="0" cellspacing="0" border="0" style="width: ${col2W}px; font-size: ${contactFontSize}px; line-height: 1.35; table-layout: fixed;">
+          <!-- Middle Right: Contact Details & Social Icons Row -->
+          <td width="${col2W}" style="width: ${col2W}px; vertical-align: top;" align="left">
+            <table width="${col2W}" cellpadding="0" cellspacing="0" border="0" style="width: ${col2W}px; font-size: ${contactFontSize}px; color: #334155; line-height: 1.45; table-layout: fixed; font-family: Arial, Helvetica, sans-serif;">
+              <!-- Phone -->
               <tr>
-                <td width="${contactIconSize + 6}" style="width: ${contactIconSize + 6}px; padding-bottom: 3px; vertical-align: middle;">
-                  <img src="${brand.contactIconsBase64.phone}" width="${contactIconSize}" height="${contactIconSize}" style="width: ${contactIconSize}px; height: ${contactIconSize}px; display: block; border: 0;" alt="Phone" />
-                </td>
-                <td style="padding-bottom: 3px; vertical-align: middle; padding-left: 4px; white-space: nowrap;">
-                  <a href="${phoneUrl}" style="color: #062B67; text-decoration: none; font-weight: 700; font-family: Arial, Helvetica, sans-serif;">${phone}</a>
+                <td width="20" style="width: 20px; font-weight: 800; color: #062B67; vertical-align: top;">T:</td>
+                <td width="${col2W - 20}" style="width: ${col2W - 20}px; vertical-align: top; color: #334155; white-space: nowrap;">
+                  <a href="${phoneUrl}" style="color: #334155; text-decoration: none; font-weight: 600;">${phone}</a>
                 </td>
               </tr>
+              <!-- Email -->
               <tr>
-                <td width="${contactIconSize + 6}" style="width: ${contactIconSize + 6}px; padding-bottom: 3px; vertical-align: middle;">
-                  <img src="${brand.contactIconsBase64.email}" width="${contactIconSize}" height="${contactIconSize}" style="width: ${contactIconSize}px; height: ${contactIconSize}px; display: block; border: 0;" alt="Email" />
-                </td>
-                <td style="padding-bottom: 3px; vertical-align: middle; padding-left: 4px; white-space: nowrap;">
-                  <a href="${emailUrl}" style="color: #062B67; text-decoration: none; font-weight: 700; font-family: Arial, Helvetica, sans-serif;">${email}</a>
+                <td width="20" style="width: 20px; font-weight: 800; color: #062B67; vertical-align: top;">E:</td>
+                <td width="${col2W - 20}" style="width: ${col2W - 20}px; vertical-align: top; color: #062B67; white-space: nowrap;">
+                  <a href="${emailUrl}" style="color: #062B67; text-decoration: none; font-weight: 700;">${email}</a>
                 </td>
               </tr>
+              <!-- Address -->
               <tr>
-                <td width="${contactIconSize + 6}" style="width: ${contactIconSize + 6}px; padding-bottom: 3px; vertical-align: middle;">
-                  <img src="${brand.contactIconsBase64.website}" width="${contactIconSize}" height="${contactIconSize}" style="width: ${contactIconSize}px; height: ${contactIconSize}px; display: block; border: 0;" alt="Website" />
-                </td>
-                <td style="padding-bottom: 3px; vertical-align: middle; padding-left: 4px; white-space: nowrap;">
-                  <a href="${webUrl}" target="_blank" style="color: #062B67; text-decoration: none; font-weight: 700; font-family: Arial, Helvetica, sans-serif;">${website}</a>
+                <td width="20" style="width: 20px; font-weight: 800; color: #062B67; vertical-align: top;">A:</td>
+                <td width="${col2W - 20}" style="width: ${col2W - 20}px; vertical-align: top; color: #475569; font-weight: 500;">
+                  ${addressLines.join(', ')}
                 </td>
               </tr>
+              <!-- Social Media Icons Row -->
               <tr>
-                <td width="${contactIconSize + 6}" style="width: ${contactIconSize + 6}px; vertical-align: top; padding-top: 1px;">
-                  <img src="${brand.contactIconsBase64.location}" width="${contactIconSize}" height="${contactIconSize}" style="width: ${contactIconSize}px; height: ${contactIconSize}px; display: block; border: 0;" alt="Address" />
-                </td>
-                <td style="vertical-align: top; padding-left: 4px; color: #475569; font-weight: 500; font-family: Arial, Helvetica, sans-serif;">
-                  ${addressLines.join('<br />')}
-                </td>
-              </tr>
-            </table>
-          </td>
-
-          <!-- Col 3: Brand Pillar with Crimson Vertical Divider (No Footer Needed) -->
-          <td width="${col3W}" style="width: ${col3W}px; vertical-align: middle; text-align: center; border-left: 2px solid #D31016; padding-left: 10px;">
-            <table width="${col3W - 10}" cellpadding="0" cellspacing="0" border="0" style="width: ${col3W - 10}px; margin: 0 auto;">
-              <tr>
-                <td style="padding-bottom: 6px; text-align: center; vertical-align: middle;">
-                  <img src="${brand.logoSvg}" width="${logoW}" style="width: ${logoW}px; height: auto; display: block; margin: 0 auto; border: 0;" alt="DMHCA Logo" />
-                </td>
-              </tr>
-              <tr>
-                <td style="font-size: ${Math.max(6.5, Math.round(8.5 * scale))}px; font-weight: 700; color: #4b5563; padding-bottom: 8px; text-align: center; font-family: Arial, Helvetica, sans-serif;">
-                  ${brand.companySubtext}
-                </td>
-              </tr>
-              <tr>
-                <td style="text-align: center; vertical-align: middle;">
-                  <table cellpadding="0" cellspacing="0" border="0" style="display: inline-block; margin: 0 auto;">
+                <td colspan="2" width="${col2W}" style="width: ${col2W}px; padding-top: 8px; vertical-align: middle;">
+                  <table cellpadding="0" cellspacing="0" border="0">
                     <tr>
-                      <td style="padding: 0 2px;"><a href="${brand.socialLinks.linkedin}" target="_blank"><img src="${brand.socialIconsBase64.linkedin}" width="${socialIconSize}" height="${socialIconSize}" style="display:block; border:0;" /></a></td>
-                      <td style="padding: 0 2px;"><a href="${brand.socialLinks.instagram}" target="_blank"><img src="${brand.socialIconsBase64.instagram}" width="${socialIconSize}" height="${socialIconSize}" style="display:block; border:0;" /></a></td>
-                      <td style="padding: 0 2px;"><a href="${brand.socialLinks.facebook}" target="_blank"><img src="${brand.socialIconsBase64.facebook}" width="${socialIconSize}" height="${socialIconSize}" style="display:block; border:0;" /></a></td>
-                      <td style="padding: 0 2px;"><a href="${brand.socialLinks.youtube}" target="_blank"><img src="${brand.socialIconsBase64.youtube}" width="${socialIconSize}" height="${socialIconSize}" style="display:block; border:0;" /></a></td>
+                      <td style="padding-right: 4px; vertical-align: middle;">
+                        <a href="${brand.socialLinks.linkedin}" target="_blank">
+                          <img src="${brand.socialIconsBase64.linkedin}" width="${socialIconSize}" height="${socialIconSize}" style="width: ${socialIconSize}px; height: ${socialIconSize}px; display: block; border: 0;" alt="LinkedIn" />
+                        </a>
+                      </td>
+                      <td style="padding-right: 4px; vertical-align: middle;">
+                        <a href="${brand.socialLinks.instagram}" target="_blank">
+                          <img src="${brand.socialIconsBase64.instagram}" width="${socialIconSize}" height="${socialIconSize}" style="width: ${socialIconSize}px; height: ${socialIconSize}px; display: block; border: 0;" alt="Instagram" />
+                        </a>
+                      </td>
+                      <td style="padding-right: 4px; vertical-align: middle;">
+                        <a href="${brand.socialLinks.facebook}" target="_blank">
+                          <img src="${brand.socialIconsBase64.facebook}" width="${socialIconSize}" height="${socialIconSize}" style="width: ${socialIconSize}px; height: ${socialIconSize}px; display: block; border: 0;" alt="Facebook" />
+                        </a>
+                      </td>
+                      <td style="padding-right: 4px; vertical-align: middle;">
+                        <a href="${brand.socialLinks.youtube}" target="_blank">
+                          <img src="${brand.socialIconsBase64.youtube}" width="${socialIconSize}" height="${socialIconSize}" style="width: ${socialIconSize}px; height: ${socialIconSize}px; display: block; border: 0;" alt="YouTube" />
+                        </a>
+                      </td>
                     </tr>
                   </table>
                 </td>
@@ -900,9 +903,34 @@ function renderLuxeTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?: Di
     </td>
   </tr>
 
-  <!-- Bottom Accent Stripe Bar -->
+  <!-- Section 3: Creative DMHCA Healthcare Footer (Email Safe Solid Dark Navy Background with Crimson Accent) -->
   <tr>
-    <td width="${W}" style="width: ${W}px; height: 3px; background-color: #062B67; font-size: 0; line-height: 0;">&nbsp;</td>
+    <td width="${W}" style="width: ${W}px; padding: 4px 14px 12px 14px; background-color: #ffffff;" align="center">
+      <table width="${innerW}" cellpadding="0" cellspacing="0" border="0" style="width: ${innerW}px; border-collapse: collapse; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #062B67 0%, #0c4a6e 65%, #D31016 100%); background-color: #062B67; color: #ffffff; table-layout: fixed;">
+        <tr>
+          <!-- Banner Text Left Column -->
+          <td width="${bannerTextW}" style="width: ${bannerTextW}px; padding: ${bannerPadY}px 14px; vertical-align: middle;" align="left">
+            <div style="font-size: ${bannerHeadingSize}px; font-weight: 800; color: #ffffff; font-family: Arial, Helvetica, sans-serif; letter-spacing: 0.2px; line-height: 1.2;">
+              ${brand.footer.heading}
+            </div>
+            <div style="font-size: ${bannerSubSize}px; color: #e0e7ff; margin-top: 3px; font-family: Arial, Helvetica, sans-serif; line-height: 1.3;">
+              ${brand.footer.description}
+            </div>
+          </td>
+
+          <!-- Banner Pill Button Right Column (Explicit Width + align="right") -->
+          <td width="${badgeW}" style="width: ${badgeW}px; padding: ${bannerPadY}px 14px ${bannerPadY}px 0; vertical-align: middle; text-align: right;" align="right">
+            <table cellpadding="0" cellspacing="0" border="0" style="display: inline-block; margin-left: auto;" align="right">
+              <tr>
+                <td style="background-color: #ffffff; color: #062B67; font-size: ${Math.max(7.5, Math.round(9.5 * scale))}px; font-weight: 800; padding: 4px 10px; border-radius: 14px; font-family: Arial, Helvetica, sans-serif; white-space: nowrap; text-align: center;">
+                  Trust & Excellence
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
   </tr>
 </table>
 `.trim();

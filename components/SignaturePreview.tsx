@@ -61,11 +61,10 @@ export const SignaturePreview: React.FC<SignaturePreviewProps> = ({
             <button
               type="button"
               onClick={() => onViewModeChange('desktop')}
-              className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                viewMode === 'desktop'
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'desktop'
                   ? 'bg-[#062B67] text-white shadow-sm border border-blue-400/40'
                   : 'text-slate-400 hover:text-slate-200'
-              }`}
+                }`}
             >
               <Monitor className="w-3.5 h-3.5" />
               <span>Desktop</span>
@@ -74,11 +73,10 @@ export const SignaturePreview: React.FC<SignaturePreviewProps> = ({
             <button
               type="button"
               onClick={() => onViewModeChange('mobile')}
-              className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                viewMode === 'mobile'
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'mobile'
                   ? 'bg-[#062B67] text-white shadow-sm border border-blue-400/40'
                   : 'text-slate-400 hover:text-slate-200'
-              }`}
+                }`}
             >
               <Smartphone className="w-3.5 h-3.5" />
               <span>Mobile (375px)</span>
@@ -167,44 +165,40 @@ export const SignaturePreview: React.FC<SignaturePreviewProps> = ({
           <button
             type="button"
             onClick={() => { onWidthChange(600); onHeightChange(200); }}
-            className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-semibold transition-all border whitespace-nowrap shrink-0 ${
-              customWidth === 600 && customHeight === 200
+            className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-semibold transition-all border whitespace-nowrap shrink-0 ${customWidth === 600 && customHeight === 200
                 ? 'bg-blue-600 text-white border-blue-400/50 shadow-sm'
                 : 'bg-slate-950 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white'
-            }`}
+              }`}
           >
             600×200
           </button>
           <button
             type="button"
             onClick={() => { onWidthChange(500); onHeightChange(180); }}
-            className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-semibold transition-all border whitespace-nowrap shrink-0 ${
-              customWidth === 500 && customHeight === 180
+            className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-semibold transition-all border whitespace-nowrap shrink-0 ${customWidth === 500 && customHeight === 180
                 ? 'bg-blue-600 text-white border-blue-400/50 shadow-sm'
                 : 'bg-slate-950 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white'
-            }`}
+              }`}
           >
             500×180
           </button>
           <button
             type="button"
             onClick={() => { onWidthChange(420); onHeightChange(230); }}
-            className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-semibold transition-all border whitespace-nowrap shrink-0 ${
-              customWidth === 420 && customHeight === 230
+            className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-semibold transition-all border whitespace-nowrap shrink-0 ${customWidth === 420 && customHeight === 230
                 ? 'bg-blue-600 text-white border-blue-400/50 shadow-sm'
                 : 'bg-slate-950 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white'
-            }`}
+              }`}
           >
             420×230
           </button>
           <button
             type="button"
             onClick={() => { onWidthChange(400); onHeightChange(150); }}
-            className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-semibold transition-all border whitespace-nowrap shrink-0 ${
-              customWidth === 400 && customHeight === 150
+            className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-semibold transition-all border whitespace-nowrap shrink-0 ${customWidth === 400 && customHeight === 150
                 ? 'bg-blue-600 text-white border-blue-400/50 shadow-sm'
                 : 'bg-slate-950 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white'
-            }`}
+              }`}
           >
             400×150
           </button>

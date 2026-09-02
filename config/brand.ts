@@ -115,9 +115,9 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
   {
     id: 'luxe',
     name: 'DMHCA Simplified',
-    description: 'Creative card layout with gradient avatar ring, crimson designation pill badge & zero footer.',
-    recommendedFor: 'C-Suite, Senior Consultants & Clean Standout Email Cards',
-    thumbnailBadge: 'Clean / No Footer',
+    description: 'Simplified 420x230 layout with top right logo, structured header, contact list & creative DMHCA footer.',
+    recommendedFor: 'High-Impact Emails & Branding',
+    thumbnailBadge: 'High Impact',
   },
 ];
 
