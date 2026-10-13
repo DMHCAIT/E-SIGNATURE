@@ -85,7 +85,7 @@ function renderClassicTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?:
 
   return `
 <!-- DMHCA Email Signature - Template 01: Classic (${W}px x ${H}px) -->
-<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; color: #1e293b; margin: 0 auto; table-layout: fixed;">
+<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; color: #1e293b; margin: 0; table-layout: fixed;">
   <!-- Top Main Section -->
   <tr>
     <td width="${W}" style="width: ${W}px; padding: ${topPadY}px 18px ${Math.max(4, Math.round(topPadY * 0.8))}px 18px; background-color: #ffffff; vertical-align: middle;">
@@ -280,7 +280,7 @@ function renderModernTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?: 
 
   return `
 <!-- DMHCA Email Signature - Template 02: Modern (${W}px x ${H}px) -->
-<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; color: #1e293b; margin: 0 auto; table-layout: fixed;">
+<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; color: #1e293b; margin: 0; table-layout: fixed;">
   <tr>
     <td style="padding: ${Math.max(8, Math.round(16 * scaleH))}px; background-color: #ffffff;">
       <table width="${W - 32}" cellpadding="0" cellspacing="0" border="0" style="width: ${W - 32}px; table-layout: fixed;">
@@ -383,7 +383,7 @@ function renderExecutiveTemplate(emp: EmployeeSignature, brand: BrandConfig, dim
 
   return `
 <!-- DMHCA Email Signature - Template 03: Executive (${W}px x ${H}px) -->
-<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; margin: 0 auto; table-layout: fixed;">
+<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; margin: 0; table-layout: fixed;">
   <!-- Executive Top Header Banner -->
   <tr>
     <td style="background-color: #ffffff; padding: ${Math.max(5, Math.round(10 * scaleH))}px 16px; border-top: 4px solid #062B67; border-bottom: 2px solid #062B67;">
@@ -486,7 +486,7 @@ function renderCompactTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?:
 
   return `
 <!-- DMHCA Email Signature - Template 04: Minimal & Sleek (${W}px x ${H}px) -->
-<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; margin: 0 auto; table-layout: fixed;">
+<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; margin: 0; table-layout: fixed;">
   <!-- Top Accent Stripe -->
   <tr>
     <td width="${W}" style="width: ${W}px; height: 4px; background-color: #062B67; font-size: 0; line-height: 0;">&nbsp;</td>
@@ -637,7 +637,7 @@ function renderCreativeTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?
 
   return `
 <!-- DMHCA Email Signature - Template 05: Creative Curve (${W}px x ${H}px - Synchronized Scaling) -->
-<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; color: #1e293b; margin: 0 auto; table-layout: fixed;">
+<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; color: #1e293b; margin: 0; table-layout: fixed;">
   <tr>
     <td width="${W}" style="width: ${W}px; padding: 0; background-color: #ffffff; vertical-align: middle;">
       <table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; table-layout: fixed;">
@@ -795,7 +795,7 @@ function renderLuxeTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?: Di
 
   return `
 <!-- DMHCA Email Signature - Template 06: DMHCA Simplified (E-mail safe Design) -->
-<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; color: #1e293b; margin: 0 auto; table-layout: fixed;">
+<table width="${W}" cellpadding="0" cellspacing="0" border="0" style="width: ${W}px; max-width: ${W}px; min-width: ${W}px; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; background-color: #ffffff; color: #1e293b; margin: 0; table-layout: fixed;">
   <!-- Section 1: Header Row (Top Left: Name & Designation | Web; Top Right: DMHCA Logo) -->
   <tr>
     <td width="${W}" style="width: ${W}px; padding: ${Math.max(6, Math.round(12 * scaleH))}px 14px 6px 14px; background-color: #ffffff; vertical-align: middle;" align="center">
