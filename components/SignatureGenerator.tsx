@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { startTransition, useState, useEffect } from 'react';
 import { RefreshCw, Trash2, Sparkles } from 'lucide-react';
-import { EmployeeSignature, SignatureTemplate } from '@/types/signature';
-import { DEFAULT_EMPLOYEE_DATA, DEFAULT_SAMPLE_PHOTO } from '@/lib/sample-data';
-import { DEFAULT_BRAND_CONFIG } from '@/config/brand';
+import { EmployeeSignature, SignatureCompany, SignatureTemplate } from '@/types/signature';
+import { DEFAULT_EMPLOYEE_DATA, DEFAULT_IBMP_EMPLOYEE_DATA, DEFAULT_SAMPLE_PHOTO } from '@/lib/sample-data';
+import { BRAND_CONFIGS } from '@/config/brand';
 import { generatePlainTextSignature, generateSignatureHTML } from '@/lib/signature-generator';
 import { validateEmployeeData } from '@/lib/validation';
 import { EmployeeForm } from './EmployeeForm';
@@ -23,6 +23,7 @@ interface SignatureGeneratorProps {
 
 export const SignatureGenerator: React.FC<SignatureGeneratorProps> = ({ onOpenGuide }) => {
   const [employee, setEmployee] = useState<EmployeeSignature>(DEFAULT_EMPLOYEE_DATA);
+  const [company, setCompany] = useState<SignatureCompany>('dmhca');
   const [template, setTemplate] = useState<SignatureTemplate>('classic');
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [activeTab, setActiveTab] = useState<'details' | 'photo' | 'template'>('details');
@@ -44,10 +45,24 @@ export const SignatureGenerator: React.FC<SignatureGeneratorProps> = ({ onOpenGu
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        setEmployee(parsed.employee || DEFAULT_EMPLOYEE_DATA);
-        setTemplate(parsed.template || 'classic');
-        if (parsed.customWidth) setCustomWidth(parsed.customWidth);
-        if (parsed.customHeight) setCustomHeight(parsed.customHeight);
+        const savedCompany = parsed.company === 'ibmp' ? 'ibmp' : 'dmhca';
+        const savedEmployee = parsed.employee || DEFAULT_EMPLOYEE_DATA;
+        const legacyIbmpDefaults =
+          savedCompany === 'ibmp' &&
+          savedEmployee.fullName === DEFAULT_EMPLOYEE_DATA.fullName &&
+          savedEmployee.designation === DEFAULT_EMPLOYEE_DATA.designation &&
+          savedEmployee.phone === DEFAULT_EMPLOYEE_DATA.phone &&
+          savedEmployee.email === DEFAULT_EMPLOYEE_DATA.email &&
+          savedEmployee.website === DEFAULT_EMPLOYEE_DATA.website &&
+          savedEmployee.address === DEFAULT_EMPLOYEE_DATA.address;
+
+        startTransition(() => {
+          setEmployee(legacyIbmpDefaults ? DEFAULT_IBMP_EMPLOYEE_DATA : savedEmployee);
+          setCompany(savedCompany);
+          setTemplate(parsed.template || 'classic');
+          if (parsed.customWidth) setCustomWidth(parsed.customWidth);
+          if (parsed.customHeight) setCustomHeight(parsed.customHeight);
+        });
       }
     } catch (e) {
       console.warn('Could not read from localStorage:', e);
@@ -57,14 +72,33 @@ export const SignatureGenerator: React.FC<SignatureGeneratorProps> = ({ onOpenGu
   // Save to LocalStorage on change
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ employee, template, customWidth, customHeight }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ employee, company, template, customWidth, customHeight }));
     } catch (e) {
       // Handle quota exceeded gracefully
     }
-  }, [employee, template, customWidth, customHeight]);
+  }, [employee, company, template, customWidth, customHeight]);
 
   const handleUpdateEmployee = (updated: Partial<EmployeeSignature>) => {
     setEmployee((prev) => ({ ...prev, ...updated }));
+  };
+
+  const handleCompanyChange = (nextCompany: SignatureCompany) => {
+    if (nextCompany === company) return;
+
+    const currentDefaults = company === 'ibmp' ? DEFAULT_IBMP_EMPLOYEE_DATA : DEFAULT_EMPLOYEE_DATA;
+    const nextDefaults = nextCompany === 'ibmp' ? DEFAULT_IBMP_EMPLOYEE_DATA : DEFAULT_EMPLOYEE_DATA;
+    setEmployee((current) => ({
+      ...current,
+      fullName: current.fullName === currentDefaults.fullName ? nextDefaults.fullName : current.fullName,
+      designation: current.designation === currentDefaults.designation ? nextDefaults.designation : current.designation,
+      phone: current.phone === currentDefaults.phone ? nextDefaults.phone : current.phone,
+      email: current.email === currentDefaults.email ? nextDefaults.email : current.email,
+      website: current.website === currentDefaults.website ? nextDefaults.website : current.website,
+      address: current.address === currentDefaults.address ? nextDefaults.address : current.address,
+      photoUrl: current.photoUrl === currentDefaults.photoUrl ? nextDefaults.photoUrl : current.photoUrl,
+      mapsUrl: current.mapsUrl === currentDefaults.mapsUrl ? nextDefaults.mapsUrl : current.mapsUrl,
+    }));
+    setCompany(nextCompany);
   };
 
   const handleResetForm = () => {
@@ -78,6 +112,7 @@ export const SignatureGenerator: React.FC<SignatureGeneratorProps> = ({ onOpenGu
       cancelText: 'Cancel',
       onConfirm: () => {
         setEmployee(DEFAULT_EMPLOYEE_DATA);
+        setCompany('dmhca');
         setTemplate('classic');
         setCustomWidth(600);
         setCustomHeight(200);
@@ -98,6 +133,7 @@ export const SignatureGenerator: React.FC<SignatureGeneratorProps> = ({ onOpenGu
         try {
           localStorage.removeItem(STORAGE_KEY);
           setEmployee(DEFAULT_EMPLOYEE_DATA);
+          setCompany('dmhca');
           setTemplate('classic');
           setCustomWidth(600);
           setCustomHeight(200);
@@ -109,11 +145,12 @@ export const SignatureGenerator: React.FC<SignatureGeneratorProps> = ({ onOpenGu
   };
 
   // Generate live signature HTML with dynamic custom dimensions & warnings
-  const htmlContent = generateSignatureHTML(employee, template, DEFAULT_BRAND_CONFIG, {
+  const brand = BRAND_CONFIGS[company];
+  const htmlContent = generateSignatureHTML(employee, template, brand, {
     width: customWidth,
     height: customHeight,
   });
-  const plainText = generatePlainTextSignature(employee);
+  const plainText = generatePlainTextSignature(employee, brand);
   const warnings = validateEmployeeData(employee);
 
   return (
@@ -146,6 +183,7 @@ export const SignatureGenerator: React.FC<SignatureGeneratorProps> = ({ onOpenGu
               htmlContent={htmlContent}
               plainText={plainText}
               employeeName={employee.fullName}
+              companyName={brand.companyName}
               customWidth={customWidth}
               customHeight={customHeight}
             />
@@ -175,6 +213,33 @@ export const SignatureGenerator: React.FC<SignatureGeneratorProps> = ({ onOpenGu
                   <RefreshCw className="w-3 h-3 3xl:w-3.5 3xl:h-3.5" />
                   <span>Reset</span>
                 </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Company Signature
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {(['dmhca', 'ibmp'] as const).map((companyOption) => {
+                  const selected = company === companyOption;
+                  const companyName = companyOption === 'dmhca' ? 'DMHCA' : 'IBMP';
+                  return (
+                    <button
+                      key={companyOption}
+                      type="button"
+                      onClick={() => handleCompanyChange(companyOption)}
+                      aria-pressed={selected}
+                      className={`rounded-lg border px-3 py-2 text-xs font-bold transition-colors ${
+                        selected
+                          ? 'border-blue-400 bg-[#062B67] text-white'
+                          : 'border-slate-700 bg-slate-800/50 text-slate-300 hover:bg-slate-800'
+                      }`}
+                    >
+                      {companyName}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -240,6 +305,7 @@ export const SignatureGenerator: React.FC<SignatureGeneratorProps> = ({ onOpenGu
               <TemplateSelector
                 selectedTemplate={template}
                 onSelect={(tpl) => setTemplate(tpl)}
+                companyName={brand.companyName}
               />
             )}
 

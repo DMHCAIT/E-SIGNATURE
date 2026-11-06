@@ -8,11 +8,13 @@ import { SignatureTemplate } from '@/types/signature';
 interface TemplateSelectorProps {
   selectedTemplate: SignatureTemplate;
   onSelect: (template: SignatureTemplate) => void;
+  companyName: string;
 }
 
 export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   selectedTemplate,
   onSelect,
+  companyName,
 }) => {
   return (
     <div className="space-y-3">
@@ -51,7 +53,9 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
 
               {/* Title & Description */}
               <div>
-                <h4 className="font-bold text-xs text-white tracking-wide">{tpl.name}</h4>
+                <h4 className="font-bold text-xs text-white tracking-wide">
+                  {tpl.name.replace('DMHCA', companyName)}
+                </h4>
                 <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">{tpl.description}</p>
               </div>
             </button>

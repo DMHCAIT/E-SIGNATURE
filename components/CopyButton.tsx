@@ -14,6 +14,7 @@ interface CopyButtonProps {
   htmlContent: string;
   plainText: string;
   employeeName: string;
+  companyName?: string;
   customWidth?: number;
   customHeight?: number;
 }
@@ -22,6 +23,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   htmlContent,
   plainText,
   employeeName,
+  companyName = 'DMHCA',
   customWidth = 600,
   customHeight = 200,
 }) => {
@@ -38,6 +40,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
     .toLowerCase()
     .replace(/[^a-z0-9]/g, '-')
     .replace(/-+/g, '-');
+  const safeCompanyName = companyName.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
   const handleCopyRich = async () => {
     const success = await copyRichHtmlSignatureToClipboard(htmlContent, plainText);
@@ -65,7 +68,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   };
 
   const handleDownloadHtml = () => {
-    downloadHtmlFile(htmlContent, `dmhca-signature-${safeName}.html`);
+    downloadHtmlFile(htmlContent, `${safeCompanyName}-signature-${safeName}.html`);
   };
 
   const handleDownloadImage = async () => {
@@ -75,7 +78,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
         htmlContent,
         customWidth,
         customHeight,
-        `dmhca-signature-${safeName}-${customWidth}x${customHeight}.png`
+        `${safeCompanyName}-signature-${safeName}-${customWidth}x${customHeight}.png`
       );
 
       if (!success) {

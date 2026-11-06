@@ -12,3 +12,13 @@ export const DEFAULT_EMPLOYEE_DATA: EmployeeSignature = {
   photoUrl: DEFAULT_SAMPLE_PHOTO,
   mapsUrl: 'https://maps.google.com/?q=Banjara+Hills+Hyderabad',
 };
+
+export const DEFAULT_IBMP_EMPLOYEE_DATA: EmployeeSignature = {
+  fullName: 'Aluri Srikanth',
+  designation: 'Inside Sales Manager',
+  phone: '+91 92818 87069',
+  email: 'shrikanth@ibmpractitioner.us',
+  website: 'www.ibmpractitioner.us',
+  address: '800 N King Street, Suite 304\nWilmington, Delaware 19801, USA',
+  photoUrl: DEFAULT_SAMPLE_PHOTO,
+};

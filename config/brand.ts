@@ -1,5 +1,6 @@
-import { BrandConfig, TemplateDefinition } from '@/types/signature';
+import { BrandConfig, SignatureCompany, TemplateDefinition } from '@/types/signature';
 import { DMHCA_OFFICIAL_LOGO_BASE64, DMHCA_TITLE_LOGO_BASE64 } from '@/lib/brand-logos';
+import { IBMP_LOGO_BASE64 } from '@/lib/ibmp-logo';
 
 // Authentic Official Social Media Icons (High-DPI PNG Base64 Data URIs — 100% Email Client Compatible)
 export const ICON_LINKEDIN_BASE64 = 'data:image/png;base64,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';
@@ -76,6 +77,34 @@ export const DEFAULT_BRAND_CONFIG: BrandConfig = {
   },
 };
 
+export const IBMP_BRAND_CONFIG: BrandConfig = {
+  ...DEFAULT_BRAND_CONFIG,
+  companyName: 'IBMP',
+  companySubtext: 'IBMP PRACTITIONER',
+  logoSvg: IBMP_LOGO_BASE64,
+  logoPngBase64: IBMP_LOGO_BASE64,
+  primaryColor: '#17324D',
+  secondaryColor: '#278879',
+  accentColor: '#48A999',
+  website: '',
+  socialLinks: {
+    linkedin: 'https://www.linkedin.com/company/ibmpractitioner/',
+    instagram: 'https://www.instagram.com/ibmpboard/',
+    facebook: 'https://www.facebook.com/ibmpractitioner',
+    youtube: 'https://www.youtube.com/@ibmpractitioner_us',
+  },
+  footer: {
+    ...DEFAULT_BRAND_CONFIG.footer,
+    heading: 'Excellence in Healthcare Practice',
+    description: 'Supporting healthcare practitioners through professional excellence.',
+  },
+};
+
+export const BRAND_CONFIGS: Record<SignatureCompany, BrandConfig> = {
+  dmhca: DEFAULT_BRAND_CONFIG,
+  ibmp: IBMP_BRAND_CONFIG,
+};
+
 export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
   {
     id: 'classic',
@@ -120,4 +149,3 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     thumbnailBadge: 'High Impact',
   },
 ];
-

@@ -33,6 +33,22 @@ function formatAddressLines(rawAddress: string): string[] {
     .filter(Boolean);
 }
 
+function applyBrandColors(html: string, brand: BrandConfig): string {
+  return html
+    .replaceAll('#062B67', brand.primaryColor)
+    .replaceAll('#D31016', brand.secondaryColor);
+}
+
+function renderBrandLogo(brand: BrandConfig, logoWidth: number, imageStyle: string): string {
+  if (brand.companyName !== 'IBMP') {
+    return `<img src="${brand.logoSvg}" width="${logoWidth}" style="${imageStyle}" alt="${brand.companyName} Logo" />`;
+  }
+
+  const renderedWidth = Math.min(logoWidth, 48);
+
+  return `<table width="${renderedWidth}" cellpadding="0" cellspacing="0" border="0" align="center" style="width: ${renderedWidth}px; table-layout: fixed; display: inline-table; vertical-align: middle; border-collapse: collapse; margin: 0 auto;"><tr><td width="${renderedWidth}" align="center" style="width: ${renderedWidth}px; padding: 0; text-align: center; vertical-align: middle;"><img src="${brand.logoSvg}" width="${renderedWidth}" style="width: ${renderedWidth}px; height: auto; display: block; border: 0; margin: 0 auto;" alt="${brand.companyName} Logo" /></td></tr><tr><td width="${renderedWidth}" align="center" style="width: ${renderedWidth}px; padding: 2px 0 0 2px; text-align: center; vertical-align: middle; white-space: nowrap; font-family: Arial, Helvetica, sans-serif; font-size: 13px; line-height: 1.2; font-weight: 800; letter-spacing: 0.8px; color: ${brand.primaryColor};">${brand.companyName}</td></tr></table>`;
+}
+
 export interface DimensionOptions {
   width?: number;  // 300 to 600
   height?: number; // 100 to 250
@@ -166,18 +182,14 @@ function renderClassicTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?:
             <table width="${col3W - 8}" cellpadding="0" cellspacing="0" border="0" style="width: ${col3W - 8}px; margin: 0 auto;">
               <tr>
                 <td style="padding-bottom: 8px; text-align: center; vertical-align: middle;">
-                  <img src="${brand.logoSvg}" width="${logoW}" style="width: ${logoW}px; height: auto; display: block; margin: 0 auto; border: 0;" alt="DMHCA Logo" />
+                  ${renderBrandLogo(brand, logoW, `width: ${logoW}px; height: auto; display: block; margin: 0 auto; border: 0;`)}
                 </td>
               </tr>
               <tr>
                 <td style="text-align: center; vertical-align: middle;">
                   <table cellpadding="0" cellspacing="0" border="0" style="display: inline-block; margin: 0 auto;">
                     <tr>
-                      <td style="padding: 0 2px; vertical-align: middle;">
-                        <a href="${brand.socialLinks.linkedin}" target="_blank" style="text-decoration: none;">
-                          <img src="${brand.socialIconsBase64.linkedin}" width="${socialIconSize}" height="${socialIconSize}" style="width: ${socialIconSize}px; height: ${socialIconSize}px; display: block; border: 0;" alt="LinkedIn" />
-                        </a>
-                      </td>
+                      ${brand.socialLinks.linkedin ? `<td style="padding: 0 2px; vertical-align: middle;"><a href="${brand.socialLinks.linkedin}" target="_blank" style="text-decoration: none;"><img src="${brand.socialIconsBase64.linkedin}" width="${socialIconSize}" height="${socialIconSize}" style="width: ${socialIconSize}px; height: ${socialIconSize}px; display: block; border: 0;" alt="LinkedIn" /></a></td>` : ''}
                       <td style="padding: 0 2px; vertical-align: middle;">
                         <a href="${brand.socialLinks.instagram}" target="_blank" style="text-decoration: none;">
                           <img src="${brand.socialIconsBase64.instagram}" width="${socialIconSize}" height="${socialIconSize}" style="width: ${socialIconSize}px; height: ${socialIconSize}px; display: block; border: 0;" alt="Instagram" />
@@ -318,10 +330,10 @@ function renderModernTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?: 
 
           <!-- Right Column: Logo & Socials -->
           <td width="${Math.round(135 * scaleW)}" style="width: ${Math.round(135 * scaleW)}px; vertical-align: middle; text-align: center; border-left: 1px solid #e2e8f0; padding-left: 8px;">
-            <img src="${brand.logoSvg}" width="${logoW}" style="width: ${logoW}px; height: auto; display: block; margin: 0 auto 8px auto;" alt="DMHCA Logo" />
+            ${renderBrandLogo(brand, logoW, `width: ${logoW}px; height: auto; display: block; margin: 0 auto 8px auto;`)}
             <table cellpadding="0" cellspacing="0" border="0" style="display: inline-block; margin: 0 auto;">
               <tr>
-                <td style="padding: 0 2px;"><a href="${brand.socialLinks.linkedin}" target="_blank"><img src="${brand.socialIconsBase64.linkedin}" width="${Math.max(14, Math.round(24 * scale))}" height="${Math.max(14, Math.round(24 * scale))}" /></a></td>
+                ${brand.socialLinks.linkedin ? `<td style="padding: 0 2px;"><a href="${brand.socialLinks.linkedin}" target="_blank"><img src="${brand.socialIconsBase64.linkedin}" width="${Math.max(14, Math.round(24 * scale))}" height="${Math.max(14, Math.round(24 * scale))}" /></a></td>` : ''}
                 <td style="padding: 0 2px;"><a href="${brand.socialLinks.instagram}" target="_blank"><img src="${brand.socialIconsBase64.instagram}" width="${Math.max(14, Math.round(24 * scale))}" height="${Math.max(14, Math.round(24 * scale))}" /></a></td>
                 <td style="padding: 0 2px;"><a href="${brand.socialLinks.facebook}" target="_blank"><img src="${brand.socialIconsBase64.facebook}" width="${Math.max(14, Math.round(24 * scale))}" height="${Math.max(14, Math.round(24 * scale))}" /></a></td>
                 <td style="padding: 0 2px;"><a href="${brand.socialLinks.youtube}" target="_blank"><img src="${brand.socialIconsBase64.youtube}" width="${Math.max(14, Math.round(24 * scale))}" height="${Math.max(14, Math.round(24 * scale))}" /></a></td>
@@ -390,12 +402,12 @@ function renderExecutiveTemplate(emp: EmployeeSignature, brand: BrandConfig, dim
       <table width="${W - 32}" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td style="vertical-align: middle;">
-            <img src="${brand.logoSvg}" width="${logoW}" style="width: ${logoW}px; height: auto; display: block; border: 0;" alt="DMHCA Logo" />
+            ${renderBrandLogo(brand, logoW, `width: ${logoW}px; height: auto; display: block; border: 0;`)}
           </td>
           <td style="text-align: right; vertical-align: middle;">
             <table cellpadding="0" cellspacing="0" border="0" style="display: inline-block;">
               <tr>
-                <td style="padding-left: 4px;"><a href="${brand.socialLinks.linkedin}" target="_blank"><img src="${brand.socialIconsBase64.linkedin}" width="${Math.max(14, Math.round(22 * scale))}" height="${Math.max(14, Math.round(22 * scale))}" /></a></td>
+                ${brand.socialLinks.linkedin ? `<td style="padding-left: 4px;"><a href="${brand.socialLinks.linkedin}" target="_blank"><img src="${brand.socialIconsBase64.linkedin}" width="${Math.max(14, Math.round(22 * scale))}" height="${Math.max(14, Math.round(22 * scale))}" /></a></td>` : ''}
                 <td style="padding-left: 4px;"><a href="${brand.socialLinks.instagram}" target="_blank"><img src="${brand.socialIconsBase64.instagram}" width="${Math.max(14, Math.round(22 * scale))}" height="${Math.max(14, Math.round(22 * scale))}" /></a></td>
                 <td style="padding-left: 4px;"><a href="${brand.socialLinks.facebook}" target="_blank"><img src="${brand.socialIconsBase64.facebook}" width="${Math.max(14, Math.round(22 * scale))}" height="${Math.max(14, Math.round(22 * scale))}" /></a></td>
                 <td style="padding-left: 4px;"><a href="${brand.socialLinks.youtube}" target="_blank"><img src="${brand.socialIconsBase64.youtube}" width="${Math.max(14, Math.round(22 * scale))}" height="${Math.max(14, Math.round(22 * scale))}" /></a></td>
@@ -524,12 +536,12 @@ function renderCompactTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?:
                   <table width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                       <td style="vertical-align: middle;">
-                        <img src="${brand.logoSvg}" width="${logoW}" style="width: ${logoW}px; height: auto; display: block; border: 0;" alt="DMHCA Logo" />
+                        ${renderBrandLogo(brand, logoW, `width: ${logoW}px; height: auto; display: block; border: 0;`)}
                       </td>
                       <td style="text-align: right; vertical-align: middle;">
                         <table cellpadding="0" cellspacing="0" border="0" style="display: inline-block;">
                           <tr>
-                            <td style="padding-left: 3px;"><a href="${brand.socialLinks.linkedin}" target="_blank"><img src="${brand.socialIconsBase64.linkedin}" width="${iconSize + 3}" height="${iconSize + 3}" style="display:block; border:0;" /></a></td>
+                            ${brand.socialLinks.linkedin ? `<td style="padding-left: 3px;"><a href="${brand.socialLinks.linkedin}" target="_blank"><img src="${brand.socialIconsBase64.linkedin}" width="${iconSize + 3}" height="${iconSize + 3}" style="display:block; border:0;" /></a></td>` : ''}
                             <td style="padding-left: 3px;"><a href="${brand.socialLinks.instagram}" target="_blank"><img src="${brand.socialIconsBase64.instagram}" width="${iconSize + 3}" height="${iconSize + 3}" style="display:block; border:0;" /></a></td>
                             <td style="padding-left: 3px;"><a href="${brand.socialLinks.facebook}" target="_blank"><img src="${brand.socialIconsBase64.facebook}" width="${iconSize + 3}" height="${iconSize + 3}" style="display:block; border:0;" /></a></td>
                             <td style="padding-left: 3px;"><a href="${brand.socialLinks.youtube}" target="_blank"><img src="${brand.socialIconsBase64.youtube}" width="${iconSize + 3}" height="${iconSize + 3}" style="display:block; border:0;" /></a></td>
@@ -709,13 +721,13 @@ function renderCreativeTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?
 
           <!-- Col 3: Logo & Social Media Icons (Synchronized Logo & Social Scaling) -->
           <td width="${Math.round(140 * scaleW)}" style="width: ${Math.round(140 * scaleW)}px; vertical-align: middle; text-align: center; padding: ${cardPadY}px 6px;">
-            <img src="${brand.logoSvg}" width="${logoW}" style="width: ${logoW}px; height: auto; display: block; margin: 0 auto 5px auto; border: 0;" alt="DMHCA Logo" />
+            ${renderBrandLogo(brand, logoW, `width: ${logoW}px; height: auto; display: block; margin: 0 auto 5px auto; border: 0;`)}
             <div style="font-size: ${subtextSize}px; font-weight: 700; color: #4b5563; margin-bottom: ${Math.max(3, Math.round(8 * scale))}px; font-family: Arial, Helvetica, sans-serif;">
               ${brand.companySubtext}
             </div>
             <table cellpadding="0" cellspacing="0" border="0" style="display: inline-block; margin: 0 auto;">
               <tr>
-                <td style="padding: 0 2px;"><a href="${brand.socialLinks.linkedin}" target="_blank"><img src="${brand.socialIconsBase64.linkedin}" width="${socialIconSize}" height="${socialIconSize}" style="display:block; border:0;" /></a></td>
+                ${brand.socialLinks.linkedin ? `<td style="padding: 0 2px;"><a href="${brand.socialLinks.linkedin}" target="_blank"><img src="${brand.socialIconsBase64.linkedin}" width="${socialIconSize}" height="${socialIconSize}" style="display:block; border:0;" /></a></td>` : ''}
                 <td style="padding: 0 2px;"><a href="${brand.socialLinks.instagram}" target="_blank"><img src="${brand.socialIconsBase64.instagram}" width="${socialIconSize}" height="${socialIconSize}" style="display:block; border:0;" /></a></td>
                 <td style="padding: 0 2px;"><a href="${brand.socialLinks.facebook}" target="_blank"><img src="${brand.socialIconsBase64.facebook}" width="${socialIconSize}" height="${socialIconSize}" style="display:block; border:0;" /></a></td>
                 <td style="padding: 0 2px;"><a href="${brand.socialLinks.youtube}" target="_blank"><img src="${brand.socialIconsBase64.youtube}" width="${socialIconSize}" height="${socialIconSize}" style="display:block; border:0;" /></a></td>
@@ -815,7 +827,7 @@ function renderLuxeTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?: Di
 
           <!-- Top Right: DMHCA Company Logo (Explicit Cell Width + align="right" for Perfect Right Alignment in Gmail/Outlook) -->
           <td width="${headerRightW}" style="width: ${headerRightW}px; vertical-align: middle; text-align: right;" align="right">
-            <img src="${brand.logoSvg}" width="${logoW}" style="width: ${logoW}px; max-width: ${logoW}px; height: auto; display: block; margin: 0 0 0 auto; border: 0;" align="right" alt="DMHCA Logo" />
+            ${renderBrandLogo(brand, logoW, `width: ${logoW}px; max-width: ${logoW}px; height: auto; display: block; margin: 0 0 0 auto; border: 0;`)}
           </td>
         </tr>
       </table>
@@ -872,11 +884,7 @@ function renderLuxeTemplate(emp: EmployeeSignature, brand: BrandConfig, dim?: Di
                 <td colspan="2" width="${col2W}" style="width: ${col2W}px; padding-top: 8px; vertical-align: middle;">
                   <table cellpadding="0" cellspacing="0" border="0">
                     <tr>
-                      <td style="padding-right: 4px; vertical-align: middle;">
-                        <a href="${brand.socialLinks.linkedin}" target="_blank">
-                          <img src="${brand.socialIconsBase64.linkedin}" width="${socialIconSize}" height="${socialIconSize}" style="width: ${socialIconSize}px; height: ${socialIconSize}px; display: block; border: 0;" alt="LinkedIn" />
-                        </a>
-                      </td>
+                      ${brand.socialLinks.linkedin ? `<td style="padding-right: 4px; vertical-align: middle;"><a href="${brand.socialLinks.linkedin}" target="_blank"><img src="${brand.socialIconsBase64.linkedin}" width="${socialIconSize}" height="${socialIconSize}" style="width: ${socialIconSize}px; height: ${socialIconSize}px; display: block; border: 0;" alt="LinkedIn" /></a></td>` : ''}
                       <td style="padding-right: 4px; vertical-align: middle;">
                         <a href="${brand.socialLinks.instagram}" target="_blank">
                           <img src="${brand.socialIconsBase64.instagram}" width="${socialIconSize}" height="${socialIconSize}" style="width: ${socialIconSize}px; height: ${socialIconSize}px; display: block; border: 0;" alt="Instagram" />
@@ -944,22 +952,25 @@ export function generateSignatureHTML(
 ): string {
   switch (templateId) {
     case 'luxe':
-      return renderLuxeTemplate(employee, brand, dimensions);
+      return applyBrandColors(renderLuxeTemplate(employee, brand, dimensions), brand);
     case 'modern':
-      return renderModernTemplate(employee, brand, dimensions);
+      return applyBrandColors(renderModernTemplate(employee, brand, dimensions), brand);
     case 'executive':
-      return renderExecutiveTemplate(employee, brand, dimensions);
+      return applyBrandColors(renderExecutiveTemplate(employee, brand, dimensions), brand);
     case 'compact':
-      return renderCompactTemplate(employee, brand, dimensions);
+      return applyBrandColors(renderCompactTemplate(employee, brand, dimensions), brand);
     case 'creative':
-      return renderCreativeTemplate(employee, brand, dimensions);
+      return applyBrandColors(renderCreativeTemplate(employee, brand, dimensions), brand);
     case 'classic':
     default:
-      return renderClassicTemplate(employee, brand, dimensions);
+      return applyBrandColors(renderClassicTemplate(employee, brand, dimensions), brand);
   }
 }
 
-export function generatePlainTextSignature(employee: EmployeeSignature): string {
+export function generatePlainTextSignature(
+  employee: EmployeeSignature,
+  brand: BrandConfig = DEFAULT_BRAND_CONFIG
+): string {
   return `
 ${employee.fullName} | ${employee.designation}
 Phone: ${employee.phone}
@@ -967,7 +978,7 @@ Email: ${employee.email}
 Website: ${employee.website}
 Address: ${employee.address.replace(/\n/g, ', ')}
 
-DMHCA - Empowering Healthcare Through Excellence
-www.dmhca.in
+${brand.companyName} - ${brand.footer.heading}
+${brand.website ? brand.website.replace(/^https?:\/\//, '') : ''}
 `.trim();
 }

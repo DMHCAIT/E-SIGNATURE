@@ -15,9 +15,10 @@ export interface SignatureDimensions {
 }
 
 export type SignatureTemplate = 'classic' | 'modern' | 'executive' | 'compact' | 'creative' | 'luxe';
+export type SignatureCompany = 'dmhca' | 'ibmp';
 
 export interface SocialLinks {
-  linkedin: string;
+  linkedin?: string;
   instagram: string;
   facebook: string;
   youtube: string;
